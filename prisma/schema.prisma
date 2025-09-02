@@ -16,25 +16,76 @@ datasource db {
 }
 
 model User {
-  id         Int       @id @default(autoincrement())
-  name       String?
-  email      String    @unique
-  password   String
+  id           Int           @id @default(autoincrement())
+  name         String?
+  email        String        @unique
+  password     String
+  Qoute        Qoute[]
+  Jobs         Job[]         @relation("PostedJob")
+  applications Application[]
+
   created_at DateTime? @default(now())
   updated_at DateTime? @updatedAt
-  Qoute      Qoute[]
+  Profile    Profile?
 
   @@index([email, id])
   @@map("users")
 }
 
 model Qoute {
-  id         Int      @id @default(autoincrement())
-  author     User     @relation(fields: [author_id], references: [id])
-  author_id  Int
-  quote      String
+  id        Int    @id @default(autoincrement())
+  quote     String
+  author_id Int
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
+  author User @relation(fields: [author_id], references: [id], onDelete: Cascade)
+
   @@map("quotes")
+}
+
+model Job {
+  id          Int           @id @default(autoincrement())
+  title       String
+  description String        @db.Text
+  company     String
+  location    String?
+  type        String?       @default("full time")
+  salary      String?
+  post_userId Int
+  application Application[]
+
+  posted_at  DateTime? @default(now())
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  posted_by User @relation("PostedJob", fields: [post_userId], references: [id])
+
+  @@map("jobs")
+}
+
+model Application {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  job_id     Int
+  status     String   @default("pending")
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id])
+  job  Job  @relation(fields: [job_id], references: [id])
+
+  @@unique([user_id, job_id])
+  @@map("applications")
+}
+
+model Profile {
+  id       Int     @id @default(autoincrement())
+  avator   String?
+  nickName String
+  bio      String  @db.Text
+  user     User    @relation(fields: [user_id], references: [id])
+  user_id  Int     @unique
+
+  @@map("profiles")
 }

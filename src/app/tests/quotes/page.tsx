@@ -2,7 +2,7 @@ import prisma from "@/db/prisma-db";
 import { Metadata } from "next";
 import Link from "next/link";
 import React from "react";
-import { Quote } from "./create-quote/page";
+// import { Quote } from "./create-quote/page";
 import { Prisma } from "@/generated/prisma";
 import { deleteQuote } from "./action";
 
@@ -48,11 +48,11 @@ const QuotesPage = async () => {
               quotes?.map((q) => (
                 <div
                   key={q.id}
-                  className="p-3 rounded-2xl my-1 bg-green-400/90 relative"
+                  className="p-3 h-auto rounded-2xl my-1 bg-green-400/90 "
                 >
                   {/* <span className=" absolute top-1 left-2">💌</span> */}
                   <div className="flex  justify-between  items-center">
-                    <h3 className="text-xl text-red-600 p-1">
+                    <h3 className="text-xl text-indigo-700 p-1">
                       {q?.author?.name}
                     </h3>
                     <span className="text-slate-800 text-xs tracking-widest">
@@ -60,7 +60,9 @@ const QuotesPage = async () => {
                     </span>
                   </div>
                   <span className="text-base text-slate-900">
-                    {q.quote.substring(0, 300)}
+                    {q?.quote.length > 300
+                      ? q.quote.substring(0, 300) + " ..."
+                      : q.quote}
                   </span>
                   <div className="pt-4">
                     <form className="flex justify-between">
