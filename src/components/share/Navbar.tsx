@@ -1,12 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import { Session } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 
-const Navbar = () => {
+interface Props {
+  signOutComponent: ReactNode;
+  session: Session;
+}
+const Navbar = ({ signOutComponent, session }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   function toggleMenu() {
@@ -21,6 +26,7 @@ const Navbar = () => {
   ];
 
   const pathname = usePathname();
+
   return (
     <main>
       <header className="flex shadow-md py-4 px-4 sm:px-10 bg-white min-h-[70px] tracking-wide relative z-50">
@@ -83,19 +89,31 @@ const Navbar = () => {
           </div>
 
           {/* Right actions */}
+
           <div className="flex max-lg:ml-auto space-x-4">
-            <button
-              type="button"
-              className="px-4 py-2 text-sm rounded-full font-medium cursor-pointer tracking-wide text-slate-900 border border-gray-400 bg-transparent hover:bg-gray-50 transition-all"
-            >
-              Login
-            </button>
-            <button
-              type="button"
-              className="px-4 py-2 text-sm rounded-full font-medium cursor-pointer tracking-wide text-white border border-blue-600 bg-blue-600 hover:bg-blue-700 transition-all"
-            >
-              Sign up
-            </button>
+            {!session && (
+              <>
+                <button
+                  type="button"
+                  className="px-4 py-2 text-sm rounded-full font-medium cursor-pointer tracking-wide text-slate-900 border border-gray-400 bg-transparent hover:bg-gray-50 transition-all"
+                >
+                  Login
+                </button>
+                <button
+                  type="button"
+                  className="px-4 py-2 text-sm rounded-full font-medium cursor-pointer tracking-wide text-white border border-blue-600 bg-blue-600 hover:bg-blue-700 transition-all"
+                >
+                  <Link href={"/auth/signup"}>Sign up</Link>
+                </button>
+              </>
+            )}
+
+            {session && (
+              <>
+                {/* signout */}
+                {signOutComponent}
+              </>
+            )}
 
             {/* Open button */}
             <button
