@@ -9,7 +9,7 @@ import React, { ReactNode, useState } from "react";
 
 interface Props {
   signOutComponent: ReactNode;
-  session: Session;
+  session?: Session | null;
 }
 const Navbar = ({ signOutComponent, session }: Props) => {
   const [isOpen, setIsOpen] = useState(false);

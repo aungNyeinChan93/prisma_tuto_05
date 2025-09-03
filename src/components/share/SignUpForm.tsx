@@ -1,9 +1,9 @@
+import prisma from "@/db/prisma-db";
 import { signIn } from "@/libs/auth";
+import { redirect } from "next/navigation";
 import React from "react";
 
 const SingUpForm = () => {
-  //   const [email, setEmail] = useState<string>("");
-  //   const [password, setPassword] = useState<string>("");
   return (
     <React.Fragment>
       <main>
@@ -14,20 +14,27 @@ const SingUpForm = () => {
             </h1>
 
             {/* Email + Password */}
-            {/* <form className="space-y-4">
+            {/* <form
+              className="space-y-4"
+              action={async (formData: FormData) => {
+                "use server";
+                const email = formData.get("email") as string;
+                const password = formData.get("password") as string;
+                await signIn("credentials", { email, password });
+                return redirect("/");
+              }}
+            >
               <input
                 type="email"
                 placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 className="w-full rounded-lg border p-2 text-indigo-300"
+                name="email"
               />
               <input
                 type="password"
                 placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 className="w-full rounded-lg border p-2 text-indigo-300"
+                name="password"
               />
               <button
                 type="submit"
@@ -37,13 +44,13 @@ const SingUpForm = () => {
               </button>
             </form> */}
 
-            {/* <div className="my-4 text-center text-gray-500">OR</div> */}
+            <div className="my-4 text-center text-gray-500">OR</div>
 
             {/* Social logins */}
             <form
               action={async () => {
                 "use server";
-                await signIn("github", { callbackUrl: "/" });
+                await signIn("github", { redirectTo: "/tests/testAuth" });
               }}
             >
               <button
